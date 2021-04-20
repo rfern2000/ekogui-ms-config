@@ -1,284 +1,136 @@
 # ===================================================================
-# Spring Boot configuration.
-#
-# This configuration will be overridden by the Spring profile you use,
-# for example application-dev.yml if you use the "dev" profile.
-#
-# More information on profiles: https://jhipster.github.io/profiles/
-# More information on configuration properties: https://jhipster.github.io/common-application-properties/
-# ===================================================================
-
-# ===================================================================
-# Standard Spring Boot properties.
-# Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# Eureka specific properties
 # ===================================================================
 
 eureka:
     client:
-        enabled: true
-        healthcheck:
-            enabled: true
-        fetch-registry: true
-        register-with-eureka: true
-        instance-info-replication-interval-seconds: 10
-        registry-fetch-interval-seconds: 10
-    instance:
-        appname: EkoguiMSJudiciales
-        instanceId: EkoguiMSJudiciales:${spring.application.instance-id:${random.value}}
-        lease-renewal-interval-in-seconds: 5
-        lease-expiration-duration-in-seconds: 10
-        status-page-url-path: ${management.context-path}/info
-        health-check-url-path: ${management.context-path}/health
-        prefer-ip-address: true
-        metadata-map:
-            zone: primary
-            profile: ${spring.profiles.active}
-            version: ${info.project.version}
-
-ribbon:
-    ReadTimeout: 27000
-    eureka:
-        enabled: true
-
-zuul:
-    host:
-        max-total-connections: 1000
-        max-per-route-connections: 100
-        connect-timeout-millis: 60000
-        socket-timeout-millis: 60000
-    semaphore:
-        max-semaphores: 500
-
-hystrix:
-    threadpool.default.coreSize: 203
-    threadpool.default.maxQueueSize: 500000
-    threadpool.default.keepAliveTimeMinutes: 2
-    threadpool.default.queueSizeRejectionThreshold: 500000
-    command:
-        default:
-            fallback.isolation.semaphore.maxConcurrentRequests: 20
-            execution:
-                timeout:
-                    enabled: false
-                isolation:
-                    strategy: THREAD
-                    thread:
-                        timeoutInMilliseconds: 30000
-
-management:
-    security:
-        roles: ADMIN
-    context-path: /management
-    info:
-        git:
-            mode: full
-    health:
-        mail:
-            enabled: false
-
-feign:
-    client:
-        config:
-            default:
-                connectTimeout: 10000
-                readTimeout:    60000
+        service-url:
+            defaultZone: http://admin:${jhipster.registry.password}@andjeaplicacion-srv1.ithbt.co:8761/eureka/
 
 # ===================================================================
 # Spring specific properties
 # ===================================================================
-
 spring:
     application:
-        name: EkoguiMSJudiciales
-    batch:
-        job:
-            enabled: false
-    jackson:
-        serialization.indent_output: true
-        serialization.FAIL_ON_EMPTY_BEANS: false
-        serialization.write_dates_as_timestamps: false
+        url: http://andjeaplicacion-srv1.ithbt.co:8080
+    profiles:
+        active: pruhbt
+        include: swagger
+    devtools:
+        restart:
+            enabled: true
     datasource:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-        hikari:
-            maximumPoolSize: 50
-            data-source-properties:
-                cachePrepStmts: true
-                prepStmtCacheSize: 250
-                prepStmtCacheSqlLimit: 2048
-                useServerPrepStmts: true
+        url: jdbc:sqlserver://10.73.109.241:1433;databaseName=EKOGUI2
+        username: sij
+        password: 99W2jcLiZDBUvZCXyFKb
     jpa:
-        database-platform: org.hibernate.dialect.SQLServer2012Dialect
-        database: SQL_SERVER
-        open-in-view: false
-        hibernate:
-            ddl-auto: none
-            naming:
-                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        show-sql: true
         properties:
-            hibernate.default_schema: sij
-            hibernate.id.new_generator_mappings: true
-            hibernate.cache.use_second_level_cache: true
-            hibernate.cache.use_query_cache: false
-            hibernate.generate_statistics: false
-            hibernate.cache.region.factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
-            hibernate.cache.hazelcast.instance_name: EkoguiMSJudiciales
-            hibernate.cache.use_minimal_puts: true
-            hibernate.cache.hazelcast.use_lite_member: true
-            hibernate.ejb.interceptor: dj.ekogui.ms.config.trazabilidad.TrazabilidadInterceptorDelete
-            hibernate.proc.param_null_passing: true
+            hibernate.search.default:
+                directory_provider: filesystem
+                indexBase: ${user.dir}/index/defaultr
+    data:
+        solr:
+             host: http://andjeaplicacion-srv2.ithbt.co:8983/solr
+
+# ===================================================================
+# Liquibase specific properties
+# ===================================================================
+
+liquibase:
+    contexts: pruhbt
+    default-schema: sij
+    parameters:
+        schemas:
+            ekogui_db: EKOGUI
+            ekogui2_db: EKOGUI2
+            ekogui_defensa_db: EKOGUI2_DEFENSA
+            ekogui_fichas_db: EKOGUI2_FICHAS
+            ekogui_pagos_db: EKOGUI2_PAGOS
+
+# ===================================================================
+# Server specific properties
+# ===================================================================
+
+server:
+    port: 8086
+
+# ===================================================================
+# JHipster specific properties
+# ===================================================================
+
+jhipster:
+    security:
+        authentication:
+            jwt:
+                secret: a74c3a40eab35e25a920cc2cdd0639d36a90dc14
     mail:
-        host: mail.office365.com
-        port: 587
-        username: ekogui@defensajuridica.gov.co
-        password: Agencia2014*
-        protocol: smtp
-        from: ekogui@defensajuridica.gov.co
-        properties.mail.smtp:
-            auth: true
-            tls.enable: true
-            starttls.enable: true
-    messages:
-        cache-seconds: 1
-        basename: i18n/messages
-    mvc:
-        favicon:
-            enabled: false
-    thymeleaf:
-        cache: false
-        mode: XHTML
+        base-url: http://andjeaplicacion-srv1.ithbt.co:8080
+        
+# ===================================================================
+# Security specific properties
+# ===================================================================
 
 security:
     auth:
         jwt:
             secret: a74c3a40eab35e25a920cc2cdd0639d36a90dc14
         feign:
-            secret: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJDQ3xTWVNURU0iLCJqdGkiOiIyMTI0NyIsInBlcm1pc29zIjoiU0VMRUVOVEkiLCJleHAiOjE1MjY1MjMyMjV9.Az40qPXUEqzi6QKDtBugW55Xdqo-HBvH2YoMET7A2cUS7crRAFrS0q8wcAXOSZhGSvAFLTvRMEand-_xdQEBeA
-    basic:
-        enabled: false
-
+            secret: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJDQ3xTWVNURU0iLCJqdGkiOiIyMTI0NyIsInBlcm1pc29zIjoiU0VMRUVOVEkiLCJleHAiOjQxMTI0NDQxMDB9.kd9hKUz2D9-jdsA71p4GxdIy8kgwHAmgSexCauT37NLGiFZu7ZKUIdkRBJX_xkaDegpII-BRTjutnaM1RGHTHQ
 # ===================================================================
-# To enable SSL, generate a certificate using:
-# keytool -genkey -alias EkoguiMSJudiciales -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
-#
-# You can also use Let's Encrypt:
-# https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm
-#
-# Then, modify the server.ssl properties so your "server" configuration looks like:
-#
-# server:
-#    port: 8443
-#    ssl:
-#        key-store: keystore.p12
-#        key-store-password: <your-password>
-#        keyStoreType: PKCS12
-#        keyAlias: EkoguiMSJudiciales
-# ===================================================================
-
-server:
-    session:
-        timeout: 600
-        cookie:
-            http-only: true
-    compression:
-        enabled: true
-        mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
-        min-response-size: 1024
-
-# ===================================================================
-# JHipster specific properties
-#
-# Full reference is available at: https://jhipster.github.io/common-application-properties/
-# ===================================================================
-
-jhipster:
-    http:
-        version: V_1_1 # To use HTTP/2 you will need SSL support (see above the "server.ssl" configuration)
-    cache: # Cache configuration
-        hazelcast: # Hazelcast distributed cache
-            time-to-live-seconds: 3600
-            backup-count: 1
-    security:
-        authentication:
-            jwt:
-                # Token is valid 24 hours
-                token-validity-in-seconds: 86400
-                token-validity-in-seconds-for-remember-me: 2592000
-    async:
-        core-pool-size: 2
-        max-pool-size: 50
-        queue-capacity: 10000
-    # By default CORS is disabled. Uncomment to enable.
-    cors:
-        allowed-origins: "*"
-        allowed-methods: GET, PUT, POST, DELETE, OPTIONS
-        allowed-headers: "*"
-        exposed-headers:
-        allow-credentials: true
-        max-age: 1800
-    swagger:
-        default-include-pattern: /api/.*
-        title: EkoguiMSJudiciales API
-        description: EkoguiMSJudiciales API documentation
-        version: 0.0.1
-        terms-of-service-url:
-        contact-name:
-        contact-url:
-        contact-email:
-        license:
-        license-url:
-    ribbon:
-        display-on-active-profiles: dev
-    mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: ekogui@defensajuridica.gov.co
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: true
-        graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
-            enabled: false
-            host: localhost
-            port: 2003
-            prefix: EkoguiMSJudiciales
-        prometheus: # Use the "prometheus" Maven profile to have the Prometheus dependencies
-            enabled: false
-            endpoint: /prometheusMetrics
-        logs: # Reports Dropwizard metrics in the logs
-            enabled: true
-            report-frequency: 60 # in seconds
-    logging:
-        logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
-            enabled: true
-            host: 192.168.90.153
-            port: 5000
-            queue-size: 512
-        spectator-metrics: # Reports Spectator Circuit Breaker metrics in the logs
-            enabled: false
-            # edit spring.metrics.export.delay-millis to set report frequency
-
-javers:
-    mappingStyle: FIELD
-    algorithm: SIMPLE
-    prettyPrint: true
-    typeSafeValues: false
-    newObjectSnapshot: false
-    packagesToScan: 
-    auditableAspectEnabled: true
-    springDataAuditableRepositoryAspectEnabled: true
-    sqlSchemaManagementEnabled: true
-    prettyPrintDateFormats:
-        localDateTime: "yyyy/MM/dd HH:mm:ss"
-        zonedDateTime: "yyyy/MM/dd HH:mm:ss"
-        localDate: "yyyy/MM/dd"
-        localTime: "HH:mm:ss" 
-
-# ===================================================================
-# Application specific properties
-# Add your own application properties here, see the ApplicationProperties class
-# to have type-safe configuration, like in the JHipsterProperties above
-#
-# More documentation is available at:
-# https://jhipster.github.io/common-application-properties/
+# Ekogui specific properties
+# ekogui-msjudiciales-procesosCasos-pru-develop/
 # ===================================================================
 
 application:
+    ekogui:
+        batch:
+            revisarProcesos:
+                cron: 0 0 1 ? * *
+            numeroDias: 7
+            indexacionValorEconomico:
+                cron: 5 0 * * * *
+                chunk:
+                    size: 50
+                    logProgress: true
+        jasperreports:
+            url: http://andjeaplicacion-srv2.ithbt.co:8080/jasperserver
+            login: ekogui2
+            password: ekogui216
+            uri_base_reportes: /reports/Ekogui/cap/
+            urlBaseReportes: jasperreports/
+            urlBaseImagesReportes: jasperreports/images/
+        archivos:
+            ruta:
+                base: /ekogui/base-qa-develop
+                tempReportesJasper: /tempReportesJasper
+                tmp_anexos_sgd: /tmp_anexos_sgd
+                metodologiaCR: /metodologiaCR
+            pagination: 3000
+        solr:
+            urlSolr: http://andjeaplicacion-srv2.ithbt.co:8983/solr/
+            indiceProcesosCasos: ekogui-msjudiciales-procesosCasos-pruebas
+            coresIndexarAuntomaticamente: ekogui-msjudiciales-procesosCasos-pruebas
+            cronIndexacionAutomatica: 0 0/30 * * * ?
+            facetCausIdProceso : caus_id
+            facetSucaIdProceso : suca_id
+            facetTipoProceso : tipr_id
+            facetEstadoProceso : esta_codigo
+            facetJurisdiccionProceso : juris_id
+            facetAccionJudicialProceso : acju_id
+            facetProcesoRelacionadoNumProceso : prre_numero_proceso
+            paramFragSizeProceso : hl.fragsize
+            valueFragSizeProceso : 250
+            rowsPagination : 10
+
+        cuantificacion_riesgo:
+            alto : 92
+            medio_alto : 65
+            medio_bajo : 35
+            bajo : 8
+        agencia:
+            id: 2
+        configuracion_actuacion:
+            instancia: 1
+            etapa: 9
+catalina_home: ./
