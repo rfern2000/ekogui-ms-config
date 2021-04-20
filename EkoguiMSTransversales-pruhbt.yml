@@ -1,0 +1,342 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overridden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+#
+# More information on profiles: https://jhipster.github.io/profiles/
+# More information on configuration properties: https://jhipster.github.io/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+eureka:
+    client:
+        enabled: true
+        healthcheck:
+            enabled: true
+        fetch-registry: true
+        register-with-eureka: true
+        instance-info-replication-interval-seconds: 10
+        registry-fetch-interval-seconds: 10
+    instance:
+        appname: EkoguiMSTransversales
+        instanceId: EkoguiMSTransversales:${spring.application.instance-id:${random.value}}
+        lease-renewal-interval-in-seconds: 5
+        lease-expiration-duration-in-seconds: 10
+        status-page-url-path: ${management.context-path}/info
+        health-check-url-path: ${management.context-path}/health
+        prefer-ip-address: true
+        metadata-map:
+            zone: primary
+            profile: ${spring.profiles.active}
+            version: ${info.project.version}
+
+ribbon:
+    eureka:
+        enabled: true
+
+zuul:
+    host:
+        max-total-connections: 1000
+        max-per-route-connections: 100
+        connect-timeout-millis: 60000
+        socket-timeout-millis: 60000
+    semaphore:
+        max-semaphores: 500
+
+hystrix:
+    command:
+        default:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 60000
+
+management:
+    security:
+        roles: ADMIN
+    context-path: /management
+    info:
+        git:
+            mode: full
+    health:
+        mail:
+            enabled: false
+
+feign:
+    client:
+        config:
+            default:
+                connectTimeout: 10000
+                readTimeout:    60000
+
+
+# ===================================================================
+# Spring specific properties
+# ===================================================================
+
+spring:
+    application:
+        name: EkoguiMSTransversales
+    devtools:
+        livereload:
+            enabled: false # we use gulp + BrowserSync for livereload
+    jackson:
+        serialization.indent_output: true
+        serialization.FAIL_ON_EMPTY_BEANS: false
+        serialization.write_dates_as_timestamps: false
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        hikari:
+            data-source-properties:
+                cachePrepStmts: true
+                prepStmtCacheSize: 250
+                prepStmtCacheSqlLimit: 2048
+                useServerPrepStmts: true
+    jpa:
+        database-platform: org.hibernate.dialect.SQLServer2012Dialect
+        database: SQL_SERVER
+        open-in-view: false
+        hibernate:
+            ddl-auto: none
+            naming:
+                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        properties:
+            hibernate.default_schema: sij
+            hibernate.id.new_generator_mappings: false
+            hibernate.cache.use_second_level_cache: true
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: false
+            hibernate.cache.region.factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
+            hibernate.cache.hazelcast.instance_name: EkoguiMSTransversales
+            hibernate.cache.use_minimal_puts: true
+            hibernate.cache.hazelcast.use_lite_member: true
+    http:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+    mail:
+        host: mail.office365.com
+        port: 587
+        username: ekogui@defensajuridica.gov.co
+        password: Agencia2014*
+        protocol: smtp
+        from: ekogui@defensajuridica.gov.co
+        properties.mail.smtp:
+            auth: true
+            tls.enable: true
+            starttls.enable: true
+    messages:
+        cache-seconds: 1
+        basename: i18n/messages
+    mvc:
+        favicon:
+            enabled: false
+    thymeleaf:
+        cache: false
+        mode: XHTML
+
+security:
+    basic:
+        enabled: false
+
+# ===================================================================
+# To enable SSL, generate a certificate using:
+# keytool -genkey -alias EkoguiMSFichas -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
+#
+# You can also use Let's Encrypt:
+# https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm
+#
+# Then, modify the server.ssl properties so your "server" configuration looks like:
+#
+# server:
+#    port: 8443
+#    ssl:
+#        key-store: keystore.p12
+#        key-store-password: <your-password>
+#        keyStoreType: PKCS12
+#        keyAlias: EkoguiMSFichas
+# ===================================================================
+
+server:
+    session:
+        timeout: 600
+        cookie:
+            http-only: true
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
+        min-response-size: 1024
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://jhipster.github.io/common-application-properties/
+# ===================================================================
+
+jhipster:
+    http:
+        version: V_1_1 # To use HTTP/2 you will need SSL support (see above the "server.ssl" configuration)
+    cache: # Cache configuration
+        hazelcast: # Hazelcast distributed cache
+            time-to-live-seconds: 3600
+            backup-count: 1
+    security:
+        authentication:
+            jwt:
+                # Token is valid 24 hours
+                token-validity-in-seconds: 86400
+                token-validity-in-seconds-for-remember-me: 2592000
+    async:
+        core-pool-size: 2
+        max-pool-size: 50
+        queue-capacity: 10000
+    # By default CORS is disabled. Uncomment to enable.
+    cors:
+        allowed-origins: "*"
+        allowed-methods: GET, PUT, POST, DELETE, OPTIONS
+        allowed-headers: "*"
+        exposed-headers:
+        allow-credentials: true
+        max-age: 1800
+    swagger:
+        default-include-pattern: /api/.*
+        title: EkoguiMSTransversales API
+        description: EkoguiMSTransversales API documentation
+        version: 0.0.1
+        terms-of-service-url:
+        contact-name:
+        contact-url:
+        contact-email:
+        license:
+        license-url:
+    ribbon:
+        display-on-active-profiles: dev
+    mail: # specific JHipster mail property, for standard properties see MailProperties
+        from: ekogui@defensajuridica.gov.co
+    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
+        jmx.enabled: true
+        graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
+            enabled: false
+            host: localhost
+            port: 2003
+            prefix: EkoguiMSTransversales
+        prometheus: # Use the "prometheus" Maven profile to have the Prometheus dependencies
+            enabled: false
+            endpoint: /prometheusMetrics
+        logs: # Reports Dropwizard metrics in the logs
+            enabled: true
+            report-frequency: 10 # in seconds
+    logging:
+        logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+            enabled: false
+            host: 192.168.90.153
+            port: 5000
+            queue-size: 512
+        spectator-metrics: # Reports Spectator Circuit Breaker metrics in the logs
+            enabled: true
+            # edit spring.metrics.export.delay-millis to set report frequency
+#feign:
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 10000
+#        readTimeout:    50000
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the URLProcesosProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://jhipster.github.io/common-application-properties/
+# ===================================================================
+
+application:
+    jasperreports:
+        urlBaseReporteFichaConciliacion: reportes/FichasConciliacion/
+        urlBaseReporteDefensa: reportes/GestionDefensa/
+        urlBaseReporteProcesoArbitramento: reportes/Arbitramento/
+        urlBaseReporteProcesoJudicial: reportes/Judiciales/
+        urlBaseReporteProcesoExtrajudicial: reportes/Extrajudiciales/
+        urlBaseReporteTrazabilidadProceso: reportes/TrazabilidadProceso/
+        urlBaseImagenes: reportes/imagenes/
+        server:
+            url: http://192.168.90.153:8080/jasperserver
+            login: ekogui2
+            password: ekogui216
+            uri_base_reportes: /reports/Ekogui/pru/
+
+    archivos:
+        ruta:
+            base: /ekogui
+            fotosPerfil: /fotosPerfil
+            actoDesignacion: /designaciones
+            providencia: /providencias
+            documentoEstrategicoAnalisis: /documentoEstrategico/analisisJurisprudencial
+            documentoEstrategicoLinea: /documentoEstrategico/lineaJurisprudencial
+            tempReportesJasper: /tempReportesJasper
+            tmp_anexos_sgd: /tmp_anexos_sgd
+        parametros:
+            tamanioMaximoArchivo: 2
+            extensionesValidasEntidades: docx,doc,xls,xlsx,pdf
+            extensionesValidas: docx,doc,pdf,jpg,png
+            extensionesValidasDocSoporte: docx,xlsx,pdf,jpg
+            tamanioMaximoImagen: 2
+            extensionesValidasImagen: pdf,jpng,jpg,png
+            extensionesValidasProvidencia: doc,docx,pdf
+        pagination: 3000
+    serviciosexternos:
+        tokenORFEO: orfeo/api/1.0.0/i/consultar_token
+        radicarORFEO: orfeo/api/1.0.0/i/radicar
+        asociarDocumentoRadicadoORFEO: orfeo/api/1.0.0/i/asociar_documento_radicado
+        crearExpedienteORFEO: orfeo/api/1.0.0/i/crear_expediente
+        consultarRadicadoORFEO: orfeo/api/1.0.0/i/consultar_radicado
+        asociarRadicadoExpedienteORFEO: orfeo/api/1.0.0/i/asociar_radicado_a_expediente
+        asociarAnexoExpedienteORFEO: orfeo/api/1.0.0/i/asociar_anexo_expediente
+        desasociarRadicadoExpedienteORFEO: orfeo/api/1.0.0/i/desasociar_radicado_expediente
+        eliminarAnexoORFEO: orfeo/api/1.0.0/i/eliminar_anexo
+        consultarAnexoRadicadoORFEO: orfeo/api/1.0.0/i/consultar_anexo_radicado
+        consultarAnexoExpedienteORFEO: orfeo/api/1.0.0/i/consultar_anexo_expediente
+    orfeo:
+        token:
+            keyIdentidad: 06ba6348c8fb64fd7d801f0cc8284d76f9f90973e681e519b3d9980de38463f9
+            usuario: dalmantan
+            aplicativo: eKogui
+        login: ekogui
+        loginDest: CLASIFICADOR405
+        dependenciaArbitramento: 405
+        tipo_proceso:
+            arbitramento:
+                codiSRD: 1
+                codiSBRD: 1
+    apiManager:
+        connectionTimeout: 10000
+        readTimeout: 10000
+        maxAttempts: 2
+        backoffPeriod: 3000
+    ekogui:
+        agencia:
+            id: 2
+javers:
+    mappingStyle: FIELD
+    algorithm: SIMPLE
+    prettyPrint: true
+    typeSafeValues: false
+    newObjectSnapshot: false
+    packagesToScan:
+    auditableAspectEnabled: true
+    springDataAuditableRepositoryAspectEnabled: true
+    sqlSchemaManagementEnabled: true
+    prettyPrintDateFormats:
+        localDateTime: "yyyy/MM/dd HH:mm:ss"
+        zonedDateTime: "yyyy/MM/dd HH:mm:ss"
+        localDate: "yyyy/MM/dd"
+        localTime: "HH:mm:ss"
