@@ -30,7 +30,7 @@ spring:
     social:
         ekogui:
             clientId: MH7kpZVjJkR1V9cOMeBQCUMvNsEa
-            clientSecret: WESbfkjLeH41Lv6pppeJdrfZkCUa
+            clientSecret: maGlosrQfMZG3ZusmGwL1T1U9tYa
             host: https://andjeaplicacion-srv1.ithbt.co:9443
 
 # ===================================================================
