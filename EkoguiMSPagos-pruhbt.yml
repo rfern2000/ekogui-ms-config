@@ -49,8 +49,8 @@ liquibase:
 
 server:
     host: andjeaplicacion-srv1.ithbt.co
-    address: tomcatmsjudiciales
-    port: 8085
+    address: tomcatmspagos
+    port: 8080
 
 # ===================================================================
 # JHipster specific properties
