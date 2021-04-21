@@ -29,9 +29,9 @@ spring:
 
     social:
         ekogui:
-            clientId: MH7kpZVjJkR1V9cOMeBQCUMvNsEa
-            clientSecret: maGlosrQfMZG3ZusmGwL1T1U9tYa
-            host: https://andjeaplicacion-srv1.ithbt.co:9443
+            clientId: oITD19P8bZ0_OktEXG81IPpA3h4a
+            clientSecret: 8CYw72wl7Rc1x8bdO1p4IZlH_NAa
+            host: https://pruebas.defensajuridica.gov.co:9443
 
 # ===================================================================
 # Liquibase specific properties
