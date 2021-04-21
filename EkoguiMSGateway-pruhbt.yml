@@ -5,7 +5,7 @@
 eureka:
     client:
         service-url:
-            defaultZone: http://admin:${jhipster.registry.password}@andjeaplicacion-srv1.ithbt.co:8761/eureka/
+            defaultZone: http://admin:${jhipster.registry.password}@tomcatmsregistry:8080/eureka/
 
 # ===================================================================
 # Spring specific properties
@@ -88,7 +88,7 @@ ekogui:
                 politicaDatos: http://devservices.ekogui.gov.co/ekogui/
             seguridad:
                 login: http://andjeaplicacion-srv1.ithbt.co:8080
-                logout: https://andjeaplicacion-srv1.ithbt.co:9443/commonauth?commonAuthLogout=true&type=oauth2
+                logout: https://pruebas.defensajuridica.gov.co:9443/commonauth?commonAuthLogout=true&type=oauth2
         parametros:
             timeout: 0
 
@@ -98,3 +98,4 @@ menu:
         ekoguims: http://andjeaplicacion-srv1.ithbt.co:8080/
     opciones:
         mostrarMenuCompleto: true
+catalina_home: ./
