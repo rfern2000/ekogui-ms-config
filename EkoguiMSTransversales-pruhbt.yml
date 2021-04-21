@@ -46,7 +46,9 @@ liquibase:
 # ===================================================================
 
 server:
-    port: 8083
+    host: andjeaplicacion-srv1.ithbt.co
+    address: tomcatmstransversales
+    port: 8085
 
 # ===================================================================
 # JHipster specific properties
