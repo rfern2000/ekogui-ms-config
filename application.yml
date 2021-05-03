@@ -12,4 +12,4 @@ jhipster:
     security:
         authentication:
             jwt:
-                secret: amvJ4hz4Uik2zb3Wyyb5
+                secret: amvJ4hz4Uik2zb3Wyyb5amvJ4hz4Uik2zb3Wyyb5
